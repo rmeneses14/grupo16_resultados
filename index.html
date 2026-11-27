@@ -166,7 +166,11 @@ async function load(){
     const r = await fetch(`${SCRIPT_URL}?accion=datos&clave=${encodeURIComponent(CLAVE)}&t=${Date.now()}`);
     const j = await r.json();
     if(!j.ok){ if(/clave/i.test(j.error||"")) return showLogin("Clave incorrecta."); throw new Error(j.error); }
-    DATA = j.headers ? j.rows.map(r => Object.fromEntries(j.headers.map((h,i)=>[h,r[i]]))) : [];
+    if(!j.headers){ // el script publicado no tiene la función del panel
+      $("#status").textContent = "El script de Google publicado es una versión anterior. En Apps Script: Implementar › Gestionar implementaciones › lápiz › Versión: Nueva versión › Implementar.";
+      return;
+    }
+    DATA = j.rows.map(r => Object.fromEntries(j.headers.map((h,i)=>[h,r[i]])));
     render();
     $("#status").textContent = `Actualizado a las ${new Date().toLocaleTimeString("es-CR",{hour:"2-digit",minute:"2-digit"})} · se actualiza solo cada ${REFRESCO_SEG} s`;
   }catch(e){
