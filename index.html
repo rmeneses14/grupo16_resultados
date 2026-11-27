@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Resultados en vivo · Encuesta IA · Grupo 16</title>
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#f4f6fb; --surface-1:#ffffff; --line:#e3e7ef; --grid:#eef1f6;
+    --text-primary:#191919; --text-secondary:#5f6672; --brand:#16336b;
+    --series-1:#257de0; --ref:#191919; --accent:#e8eefb; --err:#b42318;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ color-scheme: dark;
+      --bg:#111317; --surface-1:#191919; --line:#2c3038; --grid:#24272e;
+      --text-primary:#efefef; --text-secondary:#9c9c9c; --brand:#8fb0ff;
+      --series-1:#338ced; --ref:#efefef; --accent:#1f2a3d; --err:#f97066; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text-primary);line-height:1.45;font-size:15px}
+  .wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+  header{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin-bottom:8px}
+  h1{font-size:1.35rem;margin:0}
+  .sub{color:var(--text-secondary);font-size:.88rem;margin:2px 0 0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface-1)}
+  .seg button{border:0;background:transparent;color:var(--text-primary);padding:8px 12px;font:inherit;font-size:.88rem;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+  .btn{border:1px solid var(--line);background:var(--surface-1);color:var(--text-primary);border-radius:10px;padding:8px 12px;font:inherit;font-size:.88rem;cursor:pointer}
+  .btn:hover{border-color:var(--text-secondary)}
+  .status{font-size:.82rem;color:var(--text-secondary)}
+  .card{background:var(--surface-1);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0}
+  .kpi .label{font-size:.82rem;color:var(--text-secondary)}
+  .kpi .value{font-size:2rem;font-weight:700;margin:2px 0;font-variant-numeric:tabular-nums}
+  .kpi .note{font-size:.8rem;color:var(--text-secondary)}
+  .meter{height:8px;border-radius:99px;background:var(--grid);overflow:hidden;margin-top:8px}
+  .meter span{display:block;height:100%;background:var(--series-1);border-radius:99px}
+  h2{font-size:1.1rem;margin:28px 0 4px}
+  .obj{color:var(--text-secondary);font-size:.88rem;margin:0 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:12px}
+  .chart h3{font-size:.98rem;margin:0}
+  .chart .base{font-size:.8rem;color:var(--text-secondary);margin:2px 0 12px}
+  .row{display:grid;grid-template-columns:minmax(110px,40%) 1fr 92px;gap:10px;align-items:center;padding:3px 0;border-radius:6px}
+  .row:hover{background:var(--accent)}
+  .row .lab{font-size:.85rem;line-height:1.25}
+  .track{position:relative;height:22px}
+  .track::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to right,var(--grid) 0 1px,transparent 1px 25%)}
+  .bar{position:absolute;left:0;top:2px;height:18px;background:var(--series-1);border-radius:0 4px 4px 0;min-width:2px}
+  .val{font-size:.8rem;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+  .ref{position:absolute;top:-1px;width:2px;height:24px;background:var(--ref)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--text-secondary);margin-top:10px}
+  .legend i{display:inline-block;vertical-align:-2px;margin-right:5px}
+  .legend .sw{width:12px;height:12px;border-radius:3px;background:var(--series-1)}
+  .legend .rf{width:2px;height:12px;background:var(--ref)}
+  .finding{font-size:.86rem;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--line)}
+  .tools{display:flex;gap:8px;margin-top:10px}
+  .tools .btn{padding:5px 10px;font-size:.8rem}
+  table{border-collapse:collapse;width:100%;font-size:.84rem;margin-top:10px}
+  th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)}
+  th:not(:first-child),td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+  .otros{font-size:.84rem;margin:10px 0 0;padding-left:18px;color:var(--text-secondary)}
+  #tip{position:fixed;pointer-events:none;background:var(--text-primary);color:var(--surface-1);font-size:.8rem;padding:6px 9px;border-radius:8px;opacity:0;transition:opacity .1s;z-index:20;max-width:260px}
+  .login{max-width:380px;margin:12vh auto 0}
+  .login input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;margin:12px 0;background:var(--surface-1);color:var(--text-primary)}
+  .login .btn{width:100%;background:var(--brand);color:#fff;border:0;padding:11px}
+  .err{color:var(--err);font-size:.86rem;min-height:1.2em}
+  .empty{color:var(--text-secondary);text-align:center;padding:30px}
+  svg text{fill:var(--text-secondary);font-size:11px}
+  footer{margin-top:28px;font-size:.78rem;color:var(--text-secondary)}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="tip" role="tooltip"></div>
+
+<section class="card login" id="login" hidden>
+  <h1>Resultados de la encuesta</h1>
+  <p class="sub">Panel privado del Grupo 16. Ingrese la clave definida en Code.gs.</p>
+  <form id="loginForm">
+    <input type="password" id="clave" placeholder="Clave del grupo" autocomplete="current-password" required>
+    <button class="btn" type="submit">Ver resultados</button>
+    <p class="err" id="loginErr"></p>
+  </form>
+</section>
+
+<div class="wrap" id="app" hidden>
+  <header>
+    <div>
+      <h1>Resultados en vivo · Uso de la IA en los estudios</h1>
+      <p class="sub">Encuesta a estudiantes de la modalidad virtual · Universidad Fidélitas · III cuatrimestre 2026</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Tipo de respuesta">
+        <button data-tipo="final" aria-pressed="true">Finales</button>
+        <button data-tipo="piloto" aria-pressed="false">Piloto</button>
+        <button data-tipo="todas" aria-pressed="false">Todas</button>
+      </div>
+      <button class="btn" id="refresh">Actualizar</button>
+      <button class="btn" id="csv">Descargar CSV</button>
+      <button class="btn" id="logout">Salir</button>
+    </div>
+  </header>
+  <p class="status" id="status">Cargando…</p>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="card">
+    <h3 style="margin:0;font-size:.98rem">Respuestas recibidas por día</h3>
+    <p class="base" id="dailyBase"></p>
+    <div id="daily"></div>
+  </section>
+
+  <div id="sections"></div>
+
+  <footer>Los porcentajes se calculan sobre las personas que respondieron cada pregunta. En las preguntas de selección múltiple pueden sumar más de 100 %. Las líneas negras marcan el valor reportado en estudios previos del marco teórico, solo como referencia: las muestras no son equivalentes. Se actualiza solo cada minuto.</footer>
+</div>
+
+<script>
+/* ================= CONFIGURACIÓN ================= */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_gC9kdH-ThQTcnyFbizkJ8rFqqJX-IBisrCO-iqudjgLPNCyOxVAE9m6n1NMmHqBK/exec";
+const META_RESPUESTAS = 30;     // meta de respuestas válidas del Capítulo III
+const REFRESCO_SEG = 60;        // cada cuánto se actualiza solo
+/* ================================================= */
+
+const NA = "No aplica (no utiliza IA)";
+const NINGUNA = "No he utilizado ninguna";
+const VARIABLES = [
+  { titulo:"Variable 1 · Formas y frecuencia de uso", obj:"Objetivo específico 1: identificar herramientas, frecuencia y finalidades de uso.", preguntas:[
+    { col:"p1_herramientas", t:"1. Herramientas de IA utilizadas", multi:true, todos:true, otra:"p1_herramientas_otra", sort:true,
+      op:["ChatGPT","Gemini","Copilot","DeepSeek","Herramientas de la Universidad Fidélitas (Fidebot, bot de investigación)","Herramientas para crear imágenes","Otra",NINGUNA] },
+    { col:"p2_frecuencia", t:"2. Frecuencia de uso", op:["Todos los días","Varias veces por semana","Una vez por semana","Algunas veces al mes","Casi nunca"] },
+    { col:"p3_finalidades", t:"3. Finalidades de uso", multi:true, otra:"p3_finalidades_otra", sort:true,
+      op:["Para buscar información","Para entender mejor un tema o concepto","Para hacer resúmenes","Para generar ideas u organizar trabajos","Para corregir la redacción o la ortografía","Para estudiar para los exámenes","Como apoyo para hacer tareas","Otra"] } ]},
+  { titulo:"Variable 2 · Beneficios y dificultades", obj:"Objetivo específico 2: describir beneficios y dificultades reportadas.", preguntas:[
+    { col:"p4_beneficios", t:"4. Beneficios percibidos", multi:true, sort:true,
+      op:["A ahorrar tiempo","A entender mejor los temas","A organizar mis trabajos","A estudiar fuera del horario de clases","A hacer los trabajos con más facilidad","No he notado beneficios"],
+      ref:{ "A ahorrar tiempo":{v:70.8, src:"Bolaños Carpio y Flores Solano (2025): 70,8 % dice que la IA reduce el tiempo de sus tareas"} } },
+    { col:"p5_dificultades", t:"5. Dificultades al utilizarla", multi:true, sort:true,
+      op:["Me ha dado información incorrecta","A veces no entiendo las respuestas","No sé bien cómo pedirle lo que necesito","No sé qué uso está permitido en cada curso","Limitaciones de acceso (versión gratuita, conexión, etc.)","No he tenido problemas"] },
+    { col:"p6_formacion", t:"6. Orientación recibida",
+      op:["Sí, de algún profesor en un curso","Sí, de la universidad (talleres, guías o charlas)","Sí, de ambos","No, aprendí por mi cuenta"],
+      ref:{ "No, aprendí por mi cuenta":{v:46.9, src:"Bolaños Carpio y Flores Solano (2025): 46,9 % niega que un docente le enseñara a usarla"} } } ]},
+  { titulo:"Variable 3 · Riesgos y uso responsable", obj:"Objetivo específico 3: examinar riesgos percibidos y prácticas de verificación.", preguntas:[
+    { col:"p7_riesgos", t:"7. Aspectos negativos reconocidos", multi:true, sort:true, todos:true,
+      op:["Puede dar información falsa","Puede facilitar que se copien trabajos (plagio)","Puede crear dependencia","Puede hacer que se estudie y se investigue menos","Puede exponer datos personales","No le veo aspectos negativos","No sé"] },
+    { col:"p8_verificacion", t:"8. ¿Revisa la información que le da la IA?", op:["Siempre","Algunas veces","Nunca"],
+      ref:{ "Siempre":{v:83.3, src:"Bolaños Carpio y Flores Solano (2025): 83,3 % afirma verificar siempre"} } },
+    { col:"p9_indicaciones", t:"9. ¿Sigue las indicaciones de sus profesores?", op:["Siempre","Algunas veces","Nunca","No conozco esas indicaciones"] },
+    { col:"p10_declaracion", t:"10. ¿Declara el uso de IA cuando se le pide?", op:["Siempre","Algunas veces","Nunca","Ningún curso me lo ha solicitado"] } ]}
+];
+
+let CLAVE = null, DATA = null, TIPO = "final", timer = null;
+const $ = s => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if(cls) e.className = cls; if(text!=null) e.textContent = text; return e; };
+const pct = (a,b) => b ? a/b*100 : 0;
+const fmt = v => v.toLocaleString("es-CR",{maximumFractionDigits:1,minimumFractionDigits:1}) + " %";
+const store = { get(k){ try{return localStorage.getItem(k)}catch(_){return null} }, set(k,v){ try{localStorage.setItem(k,v)}catch(_){} }, del(k){ try{localStorage.removeItem(k)}catch(_){} } };
+
+/* ---------- datos ---------- */
+async function load(){
+  $("#status").textContent = "Actualizando…";
+  try{
+    const r = await fetch(`${SCRIPT_URL}?accion=datos&clave=${encodeURIComponent(CLAVE)}&t=${Date.now()}`);
+    const j = await r.json();
+    if(!j.ok){ if(/clave/i.test(j.error||"")) return showLogin("Clave incorrecta."); throw new Error(j.error); }
+    DATA = j.headers ? j.rows.map(r => Object.fromEntries(j.headers.map((h,i)=>[h,r[i]]))) : [];
+    render();
+    $("#status").textContent = `Actualizado a las ${new Date().toLocaleTimeString("es-CR",{hour:"2-digit",minute:"2-digit"})} · se actualiza solo cada ${REFRESCO_SEG} s`;
+  }catch(e){
+    $("#status").textContent = "No se pudo actualizar. Se reintentará en el próximo ciclo.";
+  }
+}
+function filtered(){ return (DATA||[]).filter(r => TIPO==="todas" ? true : r.tipo===TIPO); }
+
+/* ---------- cálculo ---------- */
+function count(rows, q){
+  const valid = rows.filter(r => r[q.col] && r[q.col] !== NA);
+  const c = Object.fromEntries(q.op.map(o=>[o,0]));
+  valid.forEach(r => (q.multi ? String(r[q.col]).split("; ") : [String(r[q.col])]).forEach(v => { if(v in c) c[v]++; }));
+  let items = q.op.map(o => ({ op:o, n:c[o], p:pct(c[o], valid.length) }));
+  if(q.sort) items.sort((a,b)=> b.n-a.n || q.op.indexOf(a.op)-q.op.indexOf(b.op));
+  return { n: valid.length, items };
+}
+
+/* ---------- render ---------- */
+function render(){
+  const rows = filtered();
+  renderKPIs(rows); renderDaily(rows);
+  const box = $("#sections"); box.replaceChildren();
+  if(!rows.length){ box.append(el("div","card empty","Todavía no hay respuestas de este tipo.")); return; }
+  VARIABLES.forEach(v => {
+    box.append(el("h2",null,v.titulo), el("p","obj",v.obj));
+    const g = el("div","grid"); box.append(g);
+    v.preguntas.forEach(q => g.append(chart(rows,q)));
+  });
+}
+
+function kpi(label, value, note, meter){
+  const c = el("div","card kpi"); c.append(el("div","label",label), el("div","value",value));
+  if(meter!=null){ const m = el("div","meter"); const s = el("span"); s.style.width = Math.min(100,meter)+"%"; m.append(s); c.append(m); }
+  if(note) c.append(el("div","note",note));
+  return c;
+}
+function renderKPIs(rows){
+  const n = rows.length;
+  const users = rows.filter(r => !String(r.p1_herramientas).includes(NINGUNA));
+  const freq = users.filter(r => ["Todos los días","Varias veces por semana"].includes(r.p2_frecuencia)).length;
+  const verif = users.filter(r => r.p8_verificacion==="Siempre").length;
+  const hoy = new Date().toDateString();
+  const today = rows.filter(r => new Date(r.fecha).toDateString()===hoy).length;
+  $("#kpis").replaceChildren(
+    kpi("Respuestas válidas", n.toString(), `${today} hoy · meta ${META_RESPUESTAS}`, pct(n,META_RESPUESTAS)),
+    kpi("Usan IA en sus estudios", n?fmt(pct(users.length,n)):"–", `${users.length} de ${n} · referencia: 85,2 % (92 de 108) en Bolaños Carpio y Flores Solano, 2025`),
+    kpi("La usan varias veces por semana o más", users.length?fmt(pct(freq,users.length)):"–", `${freq} de ${users.length} que la usan`),
+    kpi("Verifican siempre la información", users.length?fmt(pct(verif,users.length)):"–", `${verif} de ${users.length} · referencia: 83,3 %`)
+  );
+}
+
+function renderDaily(rows){
+  const box = $("#daily"); box.replaceChildren();
+  if(!rows.length){ $("#dailyBase").textContent = ""; box.append(el("p","empty","Sin respuestas todavía.")); return; }
+  const byDay = {};
+  rows.forEach(r => { const d = new Date(r.fecha); const k = d.toLocaleDateString("en-CA"); byDay[k]=(byDay[k]||0)+1; });
+  const keys = Object.keys(byDay).sort();
+  // rellenar días sin respuestas entre la primera y la última fecha
+  const days = []; for(let d=new Date(keys[0]+"T12:00"); d<=new Date(keys[keys.length-1]+"T12:00"); d.setDate(d.getDate()+1)) days.push(d.toLocaleDateString("en-CA"));
+  const vals = days.map(k=>byDay[k]||0), max = Math.max(...vals);
+  $("#dailyBase").textContent = `${rows.length} respuestas en ${days.length} día(s) · máximo ${max} en un día`;
+  const W = 1000, H = 160, padB = 22, padT = 16, bw = Math.min(24, (W/days.length)*0.6);
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns,"svg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("width","100%"); svg.setAttribute("role","img");
+  svg.setAttribute("aria-label","Respuestas por día");
+  const base = document.createElementNS(ns,"line"); Object.entries({x1:0,x2:W,y1:H-padB,y2:H-padB,stroke:"var(--line)"}).forEach(([k,v])=>base.setAttribute(k,v)); svg.append(base);
+  const step = Math.max(1, Math.ceil(days.length/10));
+  days.forEach((d,i)=>{
+    const cx = (i+0.5)*W/days.length, h = max ? (vals[i]/max)*(H-padB-padT) : 0;
+    const g = document.createElementNS(ns,"g");
+    const hit = document.createElementNS(ns,"rect"); Object.entries({x:cx-W/days.length/2,y:0,width:W/days.length,height:H,fill:"transparent"}).forEach(([k,v])=>hit.setAttribute(k,v));
+    const p = document.createElementNS(ns,"path"); const x=cx-bw/2, y=H-padB-h, r=Math.min(4,h);
+    p.setAttribute("d", h? `M${x},${H-padB} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${H-padB} Z` : "");
+    p.setAttribute("fill","var(--series-1)");
+    g.append(hit,p);
+    const label = new Date(d+"T12:00").toLocaleDateString("es-CR",{day:"numeric",month:"short"});
+    if(i%step===0){ const t=document.createElementNS(ns,"text"); t.setAttribute("x",cx); t.setAttribute("y",H-6); t.setAttribute("text-anchor","middle"); t.textContent=label; g.append(t); }
+    if(i===days.length-1 || vals[i]===max){ const t=document.createElementNS(ns,"text"); t.setAttribute("x",cx); t.setAttribute("y",y-4); t.setAttribute("text-anchor","middle"); t.textContent=vals[i]; g.append(t); }
+    tipOn(g, `${label}: ${vals[i]} respuesta(s)`);
+    svg.append(g);
+  });
+  box.append(svg);
+}
+
+function chart(rows, q){
+  const { n, items } = count(rows, q);
+  const c = el("section","card chart");
+  c.append(el("h3",null,q.t));
+  c.append(el("p","base", (q.todos?"Todos los participantes":"Participantes que usan IA") + ` · n = ${n}` + (q.multi?" · selección múltiple":"")));
+  if(!n){ c.append(el("p","empty","Sin respuestas para esta pregunta.")); return c; }
+  const scale = 100; // escala fija 0–100 %: las barras se comparan igual entre gráficos
+  const chartBox = el("div"); c.append(chartBox);
+  items.forEach(it => {
+    const row = el("div","row");
+    const lab = el("div","lab",it.op);
+    const tr = el("div","track");
+    const bar = el("div","bar"); bar.style.width = (it.p/scale*100)+"%";
+    const val = el("div","val", `${fmt(it.p)} (${it.n})`);
+    tr.append(bar);
+    let tip = `${it.op}: ${it.n} de ${n} (${fmt(it.p)})`;
+    const ref = q.ref && q.ref[it.op];
+    if(ref){ const rf = el("div","ref"); rf.style.left = (ref.v/scale*100)+"%"; tr.append(rf); tip += ` · Antecedente: ${ref.src}`; }
+    row.append(lab,tr,val); tipOn(row, tip); chartBox.append(row);
+  });
+  const lg = el("div","legend");
+  const a = el("span"); a.append(el("i","sw")); a.append(document.createTextNode("% de participantes (n)")); lg.append(a);
+  if(q.ref){ const b = el("span"); b.append(el("i","rf")); b.append(document.createTextNode("Estudio previo")); lg.append(b); }
+  c.append(lg);
+
+  // hallazgo
+  const top = [...items].sort((a,b)=>b.n-a.n)[0];
+  let txt = `La opción más elegida fue «${top.op}», con ${fmt(top.p)} (${top.n} de ${n}).`;
+  if(q.ref){ const [k,r] = Object.entries(q.ref)[0]; const mine = items.find(i=>i.op===k);
+    const d = mine.p - r.v; txt += ` «${k}»: ${fmt(mine.p)} frente a ${fmt(r.v)} en el antecedente (${d>=0?"+":""}${d.toLocaleString("es-CR",{maximumFractionDigits:1})} puntos).`; }
+  c.append(el("p","finding",txt));
+
+  // "Otra": textos escritos
+  if(q.otra){ const otros = rows.map(r=>String(r[q.otra]||"").trim()).filter(Boolean);
+    if(otros.length){ const ul = el("ul","otros"); const cnt = {}; otros.forEach(o=>{const k=o.toLowerCase(); cnt[k]=cnt[k]||{t:o,n:0}; cnt[k].n++;});
+      Object.values(cnt).sort((a,b)=>b.n-a.n).forEach(o=>ul.append(el("li",null,`${o.t} (${o.n})`)));
+      c.append(el("p","base","Respuestas escritas en «Otra»:")); c.append(ul); } }
+
+  // tabla y copiar
+  const tools = el("div","tools");
+  const bT = el("button","btn","Ver tabla"), bC = el("button","btn","Copiar tabla");
+  tools.append(bT,bC); c.append(tools);
+  const tbl = el("table"); tbl.hidden = true;
+  const th = el("tr"); ["Opción","Frecuencia","Porcentaje"].forEach(h=>th.append(el("th",null,h))); tbl.append(th);
+  q.op.forEach(o => { const it = items.find(i=>i.op===o); const tr = el("tr"); tr.append(el("td",null,o), el("td",null,it.n), el("td",null,fmt(it.p))); tbl.append(tr); });
+  const tt = el("tr"); tt.append(el("td",null,"Total de participantes"), el("td",null,n), el("td",null,q.multi?"—":"100 %")); tbl.append(tt);
+  c.append(tbl);
+  bT.onclick = () => { tbl.hidden = !tbl.hidden; bT.textContent = tbl.hidden ? "Ver tabla" : "Ocultar tabla"; };
+  bC.onclick = async () => {
+    const lines = [["Opción","Frecuencia","Porcentaje"].join("\t"), ...q.op.map(o=>{const it=items.find(i=>i.op===o); return [o,it.n,fmt(it.p)].join("\t");}), ["Total de participantes",n,q.multi?"—":"100 %"].join("\t")];
+    try{ await navigator.clipboard.writeText(lines.join("\n")); bC.textContent = "¡Copiada!"; }catch(_){ bC.textContent = "No se pudo copiar"; }
+    setTimeout(()=>bC.textContent="Copiar tabla",1800);
+  };
+  return c;
+}
+
+/* ---------- tooltip ---------- */
+const tipEl = $("#tip");
+function tipOn(node, text){
+  node.addEventListener("mousemove", e => { tipEl.textContent = text; tipEl.style.opacity = 1;
+    const x = Math.min(e.clientX+14, innerWidth - tipEl.offsetWidth - 8); tipEl.style.left = x+"px"; tipEl.style.top = (e.clientY+14)+"px"; });
+  node.addEventListener("mouseleave", () => tipEl.style.opacity = 0);
+}
+
+/* ---------- CSV ---------- */
+$("#csv").onclick = () => {
+  const rows = filtered(); if(!rows.length) return;
+  const cols = Object.keys(rows[0]);
+  const esc = v => `"${String(v??"").replace(/"/g,'""')}"`;
+  const csv = "﻿" + [cols.map(esc).join(","), ...rows.map(r=>cols.map(c=>esc(r[c])).join(","))].join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download = `encuesta_ia_${TIPO}_${new Date().toLocaleDateString("en-CA")}.csv`; a.click(); URL.revokeObjectURL(a.href);
+};
+
+/* ---------- sesión ---------- */
+function showLogin(msg){ clearInterval(timer); $("#app").hidden = true; $("#login").hidden = false; $("#loginErr").textContent = msg||""; store.del("g16_clave"); }
+function start(){ $("#login").hidden = true; $("#app").hidden = false; load(); clearInterval(timer); timer = setInterval(load, REFRESCO_SEG*1000); }
+$("#loginForm").onsubmit = e => { e.preventDefault(); CLAVE = $("#clave").value.trim(); store.set("g16_clave", CLAVE); start(); };
+$("#logout").onclick = () => showLogin();
+$("#refresh").onclick = load;
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  TIPO = b.dataset.tipo; document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed", x===b)); render(); });
+CLAVE = store.get("g16_clave"); CLAVE ? start() : showLogin();
+</script>
+</body>
+</html>
